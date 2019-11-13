@@ -1,0 +1,237 @@
+@charset "utf-8";
+/* CSS Document */
+
+#sub_img {
+	width:971px;
+	height:179px;
+	background-image: url(../images/company/sub_back.png);
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+/* 고객센터 백그라운드 */
+#sub_img_center {
+	width:971px;
+	height:179px;
+	background-image: url(../images/center/sub_back.png);
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+
+/* 멤버쉽 백그라운드  */
+#sub_img_member {
+	width:971px;
+	height:179px;
+	background-image: url(../images/member/sub_back.png);
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+
+/* 서브 메뉴 시작 */
+#sub_menu {
+	width:238px;
+	float:left;
+	margin:20px;
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 1em;
+
+}
+
+#sub_menu ul {
+	margin:20px 0 0 10px;
+	list-style:none;
+
+}
+
+ #sub_menu a {
+	text-decoration:none;
+	color: #666;
+	display:block;
+	height:15px;
+	width:150px;
+	padding: 7px;
+	border-bottom-width: 1px;
+	border-bottom-style: dotted;
+	border-bottom-color: #999;
+	background-image: url(../images/bullet.gif);
+	background-repeat: no-repeat;
+	background-position: right center;
+}
+
+#sub_menu a:hover {
+	background-image: url(../images/bullet_orange.gif);
+	background-repeat: no-repeat;
+	background-position: right center;
+	color: #F90;
+}
+
+/* 콘텐츠 시작 */
+article#B {
+	padding-top:10vh;
+	padding-bottom:16vh;
+	float:center;
+	width:100%;
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 1em;
+	line-height: 1.5em;
+
+}
+
+article h1 {
+	font-family:  auto;
+	font-size: 5vh;
+	color: #CCC;
+	margin:20px 0;
+	font-weight: normal;
+}
+
+article p {
+	padding-left:10px;
+}
+
+figure.ceo {
+	float:right;
+	margin:5px;
+}
+figcaption {
+	text-align:center;
+	color: #39F;
+}
+
+/* history 부분 처리 */
+
+
+article dl.dot_none {
+	border-bottom:none;
+}
+
+/* notice table 작업 */
+
+article table#notice {
+	border-collapse:collapse;
+	margin:20px 0 0 0;
+
+}
+
+article table#notice th {
+	height:5vh;
+	width:33vh;
+	text-transform: capitalize;
+	font-size: 14px;
+	font-family:seo;
+	font-weight: bold;
+	padding:5px;
+	background-repeat: repeat-x;
+	background-position: center center;
+	background-image: url(../images/center/t_back.jpg);
+	color: black;
+	text-align:center;
+}
+
+article th.tno {
+	border-top-left-radius:5px;
+	border-bottom-left-radius:5px;
+	width:80px;
+}
+article th.ttitle {
+	width:1000px;
+	letter-spacing: 0.7em;
+}
+article th.twrite {
+	width:40vh;
+}
+article th.tdate{
+	width:160px;
+}
+article th.tread {
+	border-top-right-radius:5px;
+	border-bottom-right-radius:5px;
+	width:160px;
+}
+
+
+article table#notice td {
+	text-align:center;
+	padding:6px 0;
+	border-bottom-width: 1px;
+	border-bottom-style: ridge;
+	border-bottom-color: black;
+}
+
+
+article table#notice td.left {
+	text-align:left;
+}
+
+article table#notice tr:hover {
+	background-color: #808080;
+	cursor: pointer;
+	curseor:hand;
+}
+
+
+
+article #table_search {
+	margin:15px 0 50px 0;
+	float:right;
+}
+
+article #table_search .input_box {
+	height:20px;
+	width:200px;
+	padding:0 10px;
+	border: 1px solid  #333 ;
+	border-radius:10px;
+	background-color: #FEFDED;
+
+}
+
+article #table_search .btn {
+	padding:2px;
+	margin:0 0 0 5px;
+	width:11vh;
+	height:7vh;
+	border:1px solid #999;
+	border-radius:10px;
+	color: gray;
+	background-image: url(../images/center/t_back.jpg);
+	background-repeat: repeat-x;
+	background-position: center center;
+}
+
+
+#page_control {
+	text-align:center;
+	margin:20px 0 0 0;
+	margin-right: auto;
+	margin-left: auto;
+
+}
+
+#page_control a {
+	padding:2px 5px;
+	text-decoration: none;
+	color: lightcyan;
+	margin:0 5px;
+
+}
+
+#page_control a:hover {
+	font-weight: bold;
+	color: #F90;
+	text-decoration: underline;
+}
+
+
+
+article#A {
+	float:center;
+	width:100%;
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 1em;
+	line-height: 1.5em;
+}
+article#C {
+	padding-top:10vh;
+	padding-bottom:16vh;
+}
+
