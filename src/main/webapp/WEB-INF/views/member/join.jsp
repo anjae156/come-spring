@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
 <head>
 <meta charset="UTF-8">
@@ -23,7 +23,7 @@ fieldset#member{
 <div>
 <article >
 <h1>회원가입</h1>
-<form  class="basic-form" name="frm" action="joinProcess.jsp" method="post" onsubmit="return check();">
+<form  class="basic-form" name="frm" action="/member/join" method="post" onsubmit="return check();">
 <fieldset id="member">
 	<legend>기본인포</legend>
 	<label>아이디</label> <input type="text" name="id" id="id" class="id"/> <br />
@@ -58,12 +58,13 @@ fieldset#member{
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script>
 var isGoodId =false;
-var isGoodPasswd = false
+var isGoodPasswd = false;
 $('#id').keyup(function () {
 	var id = $(this).val();
+	console.log(id);
 	
 	$.ajax({
-		url: 'joinIdDupCheckJson.jsp',
+		url: '/member/joinIdDupCheckJson',
 		data: {id: id},
 		success: function (data) {
 			console.log(typeof data);

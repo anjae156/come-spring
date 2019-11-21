@@ -13,7 +13,7 @@
 <div>
 
 <h1>login</h1>
-<form action="loginProcess.jsp" name="" class="basic-form button">
+<form action="/member/login" method="post" class="basic-form button">
 <fieldset>
 <legend hidden="">로그인 인포</legend>
 <label>아이디</label>
@@ -26,7 +26,7 @@
 
 <div>
 <input type="submit" value="로그인" class="BB" />
-<input type="button" value="회원가입" class="BB" onclick="location.href='join.jsp'" />
+<input type="button" value="회원가입" class="BB" onclick="location.href='../member/join'" />
 <input type="reset" value="초기화" class="BB" />
 </div>
 

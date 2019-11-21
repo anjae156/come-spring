@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<link href="../css/subpage.css" rel="stylesheet" type="text/css"  media="all">
+<link href="../resources/css/subpage.css" rel="stylesheet" type="text/css"  media="all">
     <jsp:include page="../include/common_head.jsp"></jsp:include>
     <title>글쓰기 페이지 </title>
 </head>
@@ -21,7 +21,7 @@
     
 <h1>자유게시판</h1>
 
-<form class="basic-form" action="nowriteProcess.jsp" method="post" name="frm" onsubmit="return check();">
+<form class="basic-form" action="/boardno/write" method="post" name="frm" onsubmit="return check();">
 <table id="notice">
 	<tr>
 		<th class="twrite">이름</th>
@@ -52,7 +52,7 @@
 <div class="basic-form">
 	<input type="submit" value="글쓰기" class="btn">
 	<input type="reset" value="다시작성" class="btn">
-	<input type="button" value="목록보기" class="btn" onclick="location.href='noticeNomember.jsp';">
+	<input type="button" value="목록보기" class="btn" onclick="location.href='/boardno/list';">
 </div>
 </form>
 

@@ -1,44 +1,72 @@
 package com.exam.controller;
 
-import java.text.DateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.exam.domain.BoardVO;
 import com.exam.service.BoardnoService;
 
 import lombok.extern.log4j.Log4j;
-
+import sun.security.krb5.internal.PAForUserEnc;
 
 @Controller
+@RequestMapping("/boardno/*")
 @Log4j
-public class HomeController {
+public class BoardnoController {
 	@Autowired
 	private BoardnoService boardnoService;
+
+	@GetMapping("/write")
+	public String write() {
+		log.info("write");
+		log.warn("주의");
+		return "noticeNomember/nowrite";
+	}
 	
+	@PostMapping("/write")
+	public String write(BoardVO boardVO,HttpServletRequest request) { 
+		//ip주소
+		boardVO.setIp(request.getRemoteAddr());
+		
+		// 게시글번호 생성기
+		int num = boardnoService.nextBoardNum();
+		// 생성된번호를 자바빈 글번호 필드에 설정
+		log.info("넘"+num);
+		boardVO.setNum(num);
+		boardVO.setReadcount(0);
+		//주글일경우
+		boardVO.setReRef(num);
+		boardVO.setReLev(0);
+		boardVO.setReSeq(0);
+		
+		//게시글한개등록하는메소드호출
+		boardnoService.insertboard(boardVO);
+		
+		return "redirect:/boardno/list";
+	}
 	
-	@GetMapping("/")
-	public String index(@RequestParam(defaultValue = "1")int pageNum,
+	@GetMapping("/list")
+	public String list(@RequestParam(defaultValue = "1")int pageNum,
 			
 			@RequestParam(defaultValue = "",required = false) String search,
 			
 			Model model) {
+		
 		log.info("pageNum: "+pageNum);
 		
-		int pageSize = 13;
+		int pageSize = 10;
 		
 		// 시작행번호 구하기
 		int startRow = (pageNum-1) *pageSize;
@@ -75,8 +103,17 @@ public class HomeController {
 		model.addAttribute("search",search);
 		model.addAttribute("pageNum",pageNum);
 		
-		log.info("메인");
-		return "main/main";
+		return "noticeNomember/noticeNomember";
+	}
+	
+	@GetMapping("/content")
+	public String content(int num,@ModelAttribute("pageNum")int pageNum,Model model) {
+		boardnoService.updateReadcount(num);
+		
+		BoardVO boardVO = boardnoService.getBoard(num);
+		
+		model.addAttribute("board", boardVO);
+		return "noticeNomember/nocontent";
 	}
 	
 	
