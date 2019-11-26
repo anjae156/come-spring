@@ -39,15 +39,9 @@ public class BoardnoController {
 	}
 	
 	@PostMapping("/write")
-	public String write(BoardVO boardVO,HttpServletRequest request) { 
-		//ip주소
-		try {
-			request.setCharacterEncoding("utf-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
+	public String write(BoardVO boardVO,HttpServletRequest request) throws Exception { 
 		boardVO.setIp(request.getRemoteAddr());
-		
+		request.setCharacterEncoding("utf-8");
 		// 게시글번호 생성기
 		int num = boardnoService.nextBoardNum();
 		// 생성된번호를 자바빈 글번호 필드에 설정

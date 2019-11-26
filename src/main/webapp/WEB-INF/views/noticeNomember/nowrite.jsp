@@ -19,7 +19,7 @@
     
 <h1>자유게시판</h1>
 
-<form class="basic-form" action="/boardno/write" method="post" name="frm" onsubmit="return check();">
+<form class="basic-form" action="/boardno/write" method="post" name="frm" onsubmit="return check();" accept-charset="utf-8">
 <table id="notice">
 	<tr>
 		<th class="twrite">이름</th>
