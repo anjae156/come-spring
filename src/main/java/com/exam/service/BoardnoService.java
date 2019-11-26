@@ -50,4 +50,22 @@ public class BoardnoService {
 			BoardVO boardVO = boardnoMapper.getBoard(num);
 			return boardVO;
 		} // getBoard method
+		
+		public boolean isPasswdEqual(int num, String passwd) {
+			log.info("num:" +num+",passwd, :"+passwd);
+			
+			boolean result = false;
+			int count = boardnoMapper.countByNumAndPasswd(num, passwd);
+			if (count == 1) {
+				result = true;// 게시글패스워드 같음
+			}else {//count == 0
+				result = false;//게시글패스워드 다름
+			}
+			return result;
+		}//isPasswdEqual method
+		
+		//게시글 수정하는메소드 호출
+		public void updateBoard(BoardVO boardVO) {
+			boardnoMapper.updateBoard(boardVO);
+		}
 }

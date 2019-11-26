@@ -14,8 +14,6 @@
 	<%--헤더링크 --%>
 	<jsp:include page="../include/header.jsp"></jsp:include>
 
-<%-- 세션값 가져오기 --%>
-<% String id = (String) session.getAttribute("id"); %>
 
 <article>
     

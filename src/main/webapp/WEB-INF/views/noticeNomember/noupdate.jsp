@@ -1,32 +1,16 @@
-<%@page import="com.exam.repository.BoardDaono"%>
-<%@page import="com.exam.domain.AttachVO"%>
-<%@page import="java.util.List"%>
-<%@page import="com.exam.repository.AttachDao"%>
-<%@page import="javax.swing.text.StyledEditorKit.BoldAction"%>
-<%@page import="com.exam.domain.BoardVO"%>
-<%@page import="com.exam.repository.BoardDao"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
-<%
-
-int num = Integer.parseInt(request.getParameter("num"));
-String pageNum = request.getParameter("pageNum");
-
-//DAO객체준비
-BoardDaono boardDaono = BoardDaono.getInstance();
-// 수정할 글 가져오기
-BoardVO boardVO = boardDaono.getBoard(num);
-%>
-
 
 
 
 <head>
 <meta charset="UTF-8">
 <title>읍데이트</title>
-<link href="../css/subpage.css" rel="stylesheet" type="text/css"  media="all">
+<link href="../resources/css/subpage.css" rel="stylesheet" type="text/css"  media="all">
 <%--CSS링크 --%>
     <jsp:include page="../include/common_head.jsp"></jsp:include>
 </head>
@@ -36,14 +20,14 @@ BoardVO boardVO = boardDaono.getBoard(num);
    <jsp:include page="../include/header.jsp"></jsp:include>
 <article id="C">
 	<h1>글수정따쒸</h1>
-	<form id="frm" action="noupdateProcess.jsp" method="post" class="basic-form" onsubmit="return check();">
-		<input type="hidden" name="pageNum" value="<%=pageNum %>" />
-		<input type="hidden" name="num" value="<%=num %>" />
+	<form id="frm" action="/boardno/modify" method="post" class="basic-form" onsubmit="return check();">
+		<input type="hidden" name="pageNum" value="${pageNum}" />
+		<input type="hidden" name="num" value="${board.num }" />
 		<table id="con">
 			<tr>
 				<th class="twrite"><label>이름</label></th>
 				<td class="left" width="300">
-					<input type="text" name="username" value="<%=boardVO.getUsername() %>">
+					<input type="text" name="username" value="${board.username}">
 				</td>
 			</tr>
 			<tr>
@@ -55,20 +39,20 @@ BoardVO boardVO = boardDaono.getBoard(num);
 			<tr>
 				<th class="twrite"><label>제목</label></th>
 				<td class="left">
-					<input type="text" name="subject"  value="<%=boardVO.getSubject() %>">
+					<input type="text" name="subject"  value="${board.subject}">
 				</td>
 			</tr>
 			<tr>
 				<th class="twrite"><label>내용</label></th>
 				<td class="left">
-					<textarea name="content" rows="13" cols="100"><%=boardVO.getContent() %></textarea> 
+					<textarea name="content" rows="13" cols="100">${board.content}</textarea> 
 				</td>
 			</tr>
 		</table>
 		<div id="table_search">
 			<input type="submit" value="글수정" class="BB" />
 			<input type="reset" value="다시작성" class="BB" />
-			<input type="button" value="목록보기" class="BB" onclick="location.href='notice.jsp?pageNum=<%=pageNum %>';"/>
+			<input type="button" value="목록보기" class="BB" onclick="location.href='notice.jsp?pageNum=${pageNum}';"/>
 		</div>
 	</form>
 </article>
@@ -84,7 +68,7 @@ BoardVO boardVO = boardDaono.getBoard(num);
 			}
 		}
 		//글수정 의도 확인하기
-		var result = confirm('<%=num %>번글을 정말로 수정하시겠습니까?');
+		var result = confirm('${board.num}번글을 정말로 수정하시겠습니까?');
 		if(result == false){
 			return false;
 		}

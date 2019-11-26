@@ -1,5 +1,6 @@
 package com.exam.controller;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,6 +8,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,14 +34,18 @@ public class BoardnoController {
 
 	@GetMapping("/write")
 	public String write() {
-		log.info("write");
-		log.warn("주의");
+		log.info("글쓰기");
 		return "noticeNomember/nowrite";
 	}
 	
 	@PostMapping("/write")
 	public String write(BoardVO boardVO,HttpServletRequest request) { 
 		//ip주소
+		try {
+			request.setCharacterEncoding("utf-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		boardVO.setIp(request.getRemoteAddr());
 		
 		// 게시글번호 생성기
@@ -115,6 +123,51 @@ public class BoardnoController {
 		model.addAttribute("board", boardVO);
 		return "noticeNomember/nocontent";
 	}
+	
+	@GetMapping("/modify")
+	public String update(int num,@ModelAttribute("pageNum") String pageNum, Model model) {
+		BoardVO boardVO = boardnoService.getBoard(num);
+		log.info("글수정");
+		 //request객체에저장
+		model.addAttribute("board",boardVO);
+		return "noticeNomember/noupdate";
+		 
+	}
+	@PostMapping("/modify")
+	public ResponseEntity<String> modify(BoardVO boardVO, String pageNum){
+		
+		boolean isPasswdEqual = boardnoService.isPasswdEqual(boardVO.getNum(), boardVO.getPasswd());
+		if (!isPasswdEqual) {
+			HttpHeaders headers=new HttpHeaders();
+			headers.add("Content-Type", "text/html; charset=UTF-8");
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append("<script>");
+			sb.append("alert('글패스워드가 다릅니다');");
+			sb.append("history.back();");
+			sb.append("</script>");
+			ResponseEntity<String> responseEntity = new ResponseEntity<String>(sb.toString(),headers,HttpStatus.OK);
+			return responseEntity;
+		}
+		
+		//게시글수정하기 메소드호출
+		boardnoService.updateBoard(boardVO);
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Type", "text/html; charset=UTF-8");
+		StringBuilder sb = new StringBuilder();
+		sb.append("<script>");
+		sb.append("alert('글수정 성공!');");
+		sb.append("location.href = '/boardno/content?num="+boardVO.getNum()+"&pageNum="+pageNum+"';");
+		sb.append("</script>");
+		
+		ResponseEntity<String> responseEntity = new ResponseEntity<String>(sb.toString(),headers,HttpStatus.OK);
+		
+		return responseEntity;
+		
+	}
+	
+	
 	
 	
 }

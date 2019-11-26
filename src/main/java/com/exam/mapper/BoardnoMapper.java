@@ -34,4 +34,7 @@ public interface BoardnoMapper {
 	//다중글삭
 	public void deleteBoards(String[] boardnum);
 	
+	public int countByNumAndPasswd(@Param("num")int num,@Param("passwd")String passwd ) ;
+		
+	
 }
