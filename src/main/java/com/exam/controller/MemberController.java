@@ -50,6 +50,7 @@ public class MemberController {
 
 		// 회원가입처리
 		memberService.insertMember(memberVO);
+		
 
 		// 로그인 페이지로 이동하는 정보 생성해서 리턴
 		return "redirect:/member/login";
@@ -156,15 +157,17 @@ public class MemberController {
 	
 	@GetMapping("/joinIdDupCheckJson")
 	 // @ResponseBody 애노테이션을 통해 리턴값을 JSON형식으로 응답준다.
-	public @ResponseBody boolean joinIdDupCheckJson(@RequestParam("id") String userid) {
+	public @ResponseBody boolean joinIdDupCheckJson(@RequestParam("id") String id) {
 		// 아이디 중복확인 메소드 호출
-		boolean isIdDup = memberService.isIdDuplicated(userid);
+		boolean isIdDup = memberService.isIdDuplicated(id);
 		return isIdDup;
 	}
 	
 	
 	@GetMapping("/info")
 	public String info() {
+		
+		
 		return "/member/info";
 	}
 	

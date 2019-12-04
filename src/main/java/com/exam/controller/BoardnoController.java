@@ -1,5 +1,6 @@
 package com.exam.controller;
 
+import java.awt.print.Pageable;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.exam.domain.BoardVO;
 import com.exam.service.BoardnoService;
@@ -83,7 +85,7 @@ public class BoardnoController {
 		// 페이지블록
 		int pageBlock = 5;
 		// 시작페이지 구하기
-		int startPage = ((pageNum - 1) / pageBlock) * pageBlock +1;
+		int startPage = ((pageNum-1) / pageBlock) * pageBlock +1;
 		
 		// 끝헤이지 번호 구하기
 		int endPage = startPage + pageBlock - 1;
@@ -161,7 +163,54 @@ public class BoardnoController {
 		
 	}
 	
+	@GetMapping("/delete")
+	public String delete(@ModelAttribute("num")int num, @ModelAttribute("pageNum")String pageNum) {
+		return "/noticeNomember/delete";
+	}
+	@PostMapping("/delete")
+	public ResponseEntity<String> delete(int num, String passwd ,String pageNum) {
+		//글패스워드가 다를때는 글패스워드다름 뒤로가기
+		if (!boardnoService.isPasswdEqual(num, passwd)) {
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("Content-Type", "text/html; charset=UTF-8");
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append("<script>");
+			sb.append("alert('글 패스워드가 다릅니다.');");
+			sb.append("history.back();");
+			sb.append("</script>");
+			
+			return new ResponseEntity<String> (sb.toString(), headers, HttpStatus.OK);
+		}
+		// 게시글삭제메소드호출
+		boardnoService.deleteBoard(num);//글 삭제처리
+		
+		// 삭제처리후 글목록 / board.list로 이동
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Location","/board/list?pageNum="+pageNum);
+		return new ResponseEntity<String>(headers,HttpStatus.FOUND); //  httpStatus.Found 리다이렉트
+	}
 	
-	
+	@GetMapping("/reple")
+	public String reple(BoardVO boardVO, @ModelAttribute("pageNum")String pageNum){
+		return "noticeNomember/reWrite";
+	}
+	@PostMapping("/reple")
+	public String reple(BoardVO boardVO, HttpServletRequest request,String pageNum, RedirectAttributes rttr) {
+		boardVO.setIp(request.getRemoteAddr());
+		
+		//게시글 번호 생성하는 매소드 호출
+		int num = boardnoService.nextBoardNum();
+		boardVO.setNum(num);
+		boardVO.setReadcount(0);
+		
+		//답글쓰기 메소드 호출
+		boardnoService.reInsertBoard(boardVO);
+		
+		rttr.addAttribute("pageNum",pageNum);
+		return "redirect:/boardno/list";
+		
+		
+	}
 	
 }

@@ -5,8 +5,8 @@
 <mapper namespace="com.exam.mapper.MemberMapper">
 
 	<insert id="insertMember">
-		INSERT INTO jspdb.member (id, passwd, name, email, address, tel, mtel, reg_date) 
-		VALUES (#{id}, #{passwd}, #{name}, #{email}, #{address}, #{tel}, #{mtel}, current_timestamp)
+		INSERT INTO member2 (id, passwd, name, age, gender, email, address, tel, mtel, reg_date) 
+		VALUES (#{id}, #{passwd}, #{name}, #{age}, #{gender}, #{email}, #{address}, #{tel}, #{mtel}, current_timestamp)
 	</insert>
 
 

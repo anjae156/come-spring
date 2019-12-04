@@ -1,3 +1,4 @@
+
 package com.exam.service;
 
 import java.util.List;
@@ -68,4 +69,23 @@ public class BoardnoService {
 		public void updateBoard(BoardVO boardVO) {
 			boardnoMapper.updateBoard(boardVO);
 		}
+		
+		public void deleteBoard(int num) {
+			boardnoMapper.deleteBoard(num);
+		}
+		//답글쓰기메소드 (update 이후 insert)
+		// 트랜잭션처리가 요구됨(안전하게 처리하려는 목적)
+		public void reInsertBoard(BoardVO boardVO) {
+			//같은 글그룹에서의 답글순서  로 재배치 업데이트 수행
+			// 조건 
+			boardnoMapper.updateReplyGroupSequence(boardVO.getReRef(), boardVO.getReSeq());
+			
+			// 답글을다는대상글의 들여쓰기값 +1
+			boardVO.setReLev(boardVO.getReLev() +1);
+			// 답글을다는 대상글의 글그룹 내의 순번값 +1
+			boardVO.setReSeq(boardVO.getReSeq() +1);
+			log.info("답글:"+boardVO);
+			//답글인서트 수행
+			boardnoMapper.insertBoard(boardVO);
+		}//reInsert
 }

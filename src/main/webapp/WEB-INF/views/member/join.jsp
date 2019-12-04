@@ -38,8 +38,9 @@ fieldset#member{
 	<span id="name-message"></span><br>
 	
 	<label>나이</label> <input type="number" name="age" /><br>
-	<label>이메일</label><input type="text" name="email" /> <br/>
-	<label>이메일 중복확인</label><input type="text" name="email2" /> <br/>
+	<label>이메일</label><input type="text" name="email" id="email"/> <br/>
+	<label>이메일 중복확인</label><input type="text" name="email2" id="email2"/> <br/>
+	<span id="email-message"></span><br>
 	<label>성별</label><input id="G" type="radio" name="gender" value="남"/>남
 			<input id="G" type="radio" name="gender" value="여"/>여<br>
 	
@@ -76,13 +77,13 @@ $('#id').keyup(function () {
 });
 function idDupMessage(isIdDup) {
 	if (isIdDup) { // 중복 true
-		$('span#id-message').html('마! 중복이다.').css('color', 'red');
+		$('span#id-message').html('이미 누가 쓰고있네요').css('color', 'red');
 		isGoodId=false;
 	}else if(frm.id.value.length < 3){
 		$('span#id-message').html('아이디는 세글자 이상 사용가능합니다.').css('color', 'red');
 		isGoodId=false;
 	} else { // 중복아님 false
-		$('span#id-message').html('마! 괘안타 써라.').css('color', 'green');
+		$('span#id-message').html('아이디 선점!').css('color', 'green');
 		isGoodId = true;
 	}
 }
@@ -91,10 +92,10 @@ function idDupMessage(isIdDup) {
 $('#passwd'&&'#passwd2').keyup(
 	function passwdDupMessage() {
 		if (frm.passwd.value == frm.passwd2.value) { // 중복 true
-			$('span#passwd-message').html('마! 괘안타 써라.').css('color', 'green');
+			$('span#passwd-message').html('일치합니다!').css('color', 'green');
 			isGoodPasswd = true;
 		} else { // 중복아님 false
-			$('span#passwd-message').html('마! 틀릿다!').css('color', 'red');
+			$('span#passwd-message').html('틀렸네요 ..').css('color', 'red');
 			isGoodPasswd=false;
 		}
 	});
@@ -102,13 +103,24 @@ $('#passwd'&&'#passwd2').keyup(
 $('#name').keyup(
 function nameDupMessage() {
 	if (frm.name.value.length<1) {
-		$('span#name-message').html('이름 쓰세욜').css('color', 'red');
+		$('span#name-message').html('이름 쓰세요!').css('color', 'red');
 		isGoodName=false;
 	} else { 
-		$('span#name-message').html('잘했다잉').css('color', 'green');
+		$('span#name-message').html('좋습니다!').css('color', 'green');
 		isGoodName = true;
 	}
 });
+
+$('#email'&&'#email2').keyup(
+		function emailDupMessage() {
+			if (frm.email.value == frm.email2.value) { // 중복 true
+				$('span#email-message').html('좋은 이메일이군요?!').css('color', 'green');
+				isGoodEmail = true;
+			} else { // 중복아님 false
+				$('span#email-message').html('틀렸습니다').css('color', 'red');
+				isGoodEmail=false;
+			}
+		});
 function check() {
 	if(!isGoodId){
 		frm.id.select();
@@ -123,6 +135,11 @@ function check() {
 	if(!isGoodName){
 		frm.name.select();
 		alert('이름을 확인하세요');
+		return false;
+	}
+	if(!isGoodEmail){
+		alert('이메일 입력값이 서로 다릅니다.')
+		frm.email2.select();
 		return false;
 	}
 	

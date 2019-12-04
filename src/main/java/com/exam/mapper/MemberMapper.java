@@ -11,24 +11,24 @@ import com.exam.domain.MemberVO;
 public interface MemberMapper {
 
 	@Select("SELECT COUNT(*) AS cnt "
-			+ "FROM jspdb.member "
+			+ "FROM member2 "
 			+ "WHERE id = #{id}")
 	public int countMemberById(String id);
 	
 	
 	public int insertMember(MemberVO vo);
 	
-	@Select("SELECT * FROM jspdb.member WHERE id = #{id}")
+	@Select("SELECT * FROM member2 WHERE id = #{id}")
 	public MemberVO getMemberById(String id);
 	
 	// 전체회원정보 가져오기
-	@Select("SELECT * FROM jspdb.member ORDER BY id ASC")
+	@Select("SELECT * FROM member2 ORDER BY id ASC")
 	public List<MemberVO> getMembers();
 	
-	@Update("UPDATE jspdb.member SET name=#{name}, age=#{age}, gender=#{gender}, email=#{email} WHERE id=#{id}")
+	@Update("UPDATE member2 SET name=#{name}, age=#{age}, gender=#{gender}, email=#{email} WHERE id=#{id}")
 	public void updateMember(MemberVO memberVO);
 	
-	@Delete("DELETE FROM jspdb.member WHERE id = #{id}")
+	@Delete("DELETE FROM member2 WHERE id = #{id}")
 	public void deleteMember(String id);
 	
 }

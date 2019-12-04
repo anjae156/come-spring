@@ -46,7 +46,7 @@
 				<div>
 					<input type="button" value="글수정" class="BB"  onclick="location.href='/boardno/modify?num=${board.num}&pageNum=${pageNum}';"/>
 					<input type="button" value="글삭제" class="BB" onclick="checkDelete();"/>
-					<input type="button" value="답글쓰기" class="BB" onclick="location.href='/boardno/reWrite?reRef=${board.reRef}&reLev=${board.reLev}&reSeq=${board.reSeq}';"/>
+					<input type="button" value="답글쓰기" class="BB" onclick="location.href='/boardno/reple?reRef=${board.reRef}&reLev=${board.reLev}&reSeq=${board.reSeq}';"/>
 					<input type="button" value="목록보기" class="BB" onclick="location.href='/boardno/list?pagenum=${pageNum}';"/>
 				</div>
 			
