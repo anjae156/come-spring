@@ -1,11 +1,22 @@
 package com.exam.controller;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.eclipse.jdt.internal.compiler.env.IModule.IService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,12 +24,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.exam.domain.AttachVO;
 import com.exam.domain.BoardVO;
 import com.exam.service.AttachService;
 import com.exam.service.BoardService;
 
 import lombok.extern.log4j.Log4j;
+import net.coobird.thumbnailator.Thumbnailator;
 
 @Controller
 @RequestMapping("/board/*")
@@ -28,6 +42,25 @@ public class BoardController {
 	private BoardService boardService;
 	@Autowired
 	private AttachService attachService;
+	private boolean isImageType(File file)throws IOException {
+		boolean isImageType = false;
+		String contentType = Files.probeContentType(file.toPath());
+		log.info("contentType:" +contentType);
+		
+		if (contentType != null) {
+			isImageType = contentType.startsWith("image");
+		}else {
+			isImageType =false;
+		}
+		return isImageType;
+	}
+	
+	private String getFolder() {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+		Date date = new Date();
+		String str = sdf.format(date);
+		return str;
+	}
 	
 	
 	@GetMapping("/list")
@@ -97,6 +130,80 @@ public class BoardController {
 			return "redirect:/board/list";
 		}
 		return "notice/fwrite";
+	}
+	
+	@PostMapping("/write")
+	public String write(MultipartFile[] files,BoardVO boardVO,HttpServletRequest request)throws Exception{
+		if (files != null) {
+			log.info("files.length:" +files.length);
+		}
+		boardVO.setIp(request.getRemoteAddr());
+		//게시글번호 생성하는 메소드 호출
+		int num = boardService.nextBoardNum();
+		
+		// 생성된번호흫 자바빈 글번호 필드에 설정
+		boardVO.setNum(num);
+		boardVO.setReadcount(0);
+		// 주글일경우
+		boardVO.setReRef(num);
+		boardVO.setReLev(0);
+		boardVO.setReSeq(0);
+		//=============================================boardVO설정완료
+		
+		
+		//==============================================Upload시작
+		ServletContext application = request.getServletContext();
+		String realpath = application.getRealPath("resources/upload");
+		log.info("realPath :" + realpath);
+		
+		// 폴더 동적생성하기
+		File uplaodPath = new File(realpath,getFolder());
+		log.info("uploadPath:"+uplaodPath);
+		if (!uplaodPath.exists()) {//존재하면? 이란뜻
+			uplaodPath.mkdirs();//업로드할폴더생성
+		}
+		
+		List<AttachVO> attachList = new ArrayList<AttachVO>();
+		
+		for (MultipartFile multipartFile : files) {
+			log.info("파일명:"+multipartFile.getOriginalFilename());
+			log.info("파일크기:"+multipartFile.getSize());
+			
+			if (multipartFile.isEmpty()) {
+				continue;//건너뛰기
+			}
+			
+			String uploadFileName = multipartFile.getOriginalFilename();
+			UUID uuid = UUID.randomUUID();
+			uploadFileName = uuid.toString() +"_"+uploadFileName;
+			log.info("최종업로드 파일명:"+uploadFileName);
+			
+			File saveFile = new File(uplaodPath,uploadFileName);
+			multipartFile.transferTo(saveFile);//파일업로드 수행완료
+			
+			//======================================================
+			
+			//attach 테이블에 insert할 AttachVO를 리스트로 준비하기
+			AttachVO attachVO = new AttachVO();
+			attachVO.setBno(boardVO.getNum());
+			attachVO.setUuid(uuid.toString());
+			attachVO.setUploadpath(getFolder());
+			attachVO.setFilename(multipartFile.getOriginalFilename());
+			
+			if(isImageType(saveFile)) {
+				File thumbnailFile = new File(uplaodPath,"s_"+uploadFileName);
+				try(FileOutputStream fos = new FileOutputStream(thumbnailFile)){
+					Thumbnailator.createThumbnail(multipartFile.getInputStream(),fos,100,100);
+				}
+				attachVO.setFiletype("I");
+			}else {
+				attachVO.setFiletype("O");
+			}
+			
+			attachList.add(attachVO);
+		}//for
+		
+		boardService.in
 	}
 	
 	

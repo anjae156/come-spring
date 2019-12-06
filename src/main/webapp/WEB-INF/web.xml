@@ -24,6 +24,10 @@
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+	
+	
+	<!-- 빈이형블로그 참조 파일크기 정하기 -->
+		
 		
 	<servlet-mapping>
 		<servlet-name>appServlet</servlet-name>

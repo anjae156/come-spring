@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.exam.domain.AttachVO;
 import com.exam.domain.BoardVO;
 import com.exam.mapper.BoardMapper;
 
@@ -40,6 +41,10 @@ public class BoardService {
 	public List<BoardVO> getBoards(int startRow, int pageSize, String search) {
 		List<BoardVO> list = boardMapper.getBoards(startRow,pageSize,search);
 		return list;
+	}
+	
+	public void insertboardAndAttaches(BoardVO boardVO,List<AttachVO> attachList) {
+		// 파일게시판 주글 등록
 	}
 	
 	
