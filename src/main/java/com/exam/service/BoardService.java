@@ -9,9 +9,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.exam.domain.BoardVO;
 import com.exam.mapper.BoardMapper;
 
+import lombok.extern.log4j.Log4j;
+
 
 @Service
 @Transactional
+@Log4j
 public class BoardService {
 
 	
@@ -35,7 +38,7 @@ public class BoardService {
 	}
 	
 	public List<BoardVO> getBoards(int startRow, int pageSize, String search) {
-		List<BoardVO> list = boardMapper.getboards(startRow,pageSize,search);
+		List<BoardVO> list = boardMapper.getBoards(startRow,pageSize,search);
 		return list;
 	}
 	

@@ -15,7 +15,7 @@ public interface BoardMapper {
 	public void insertBoard(BoardVO boardVO);
 	
 	//페이징으로 글목록 가져오기
-	public List<BoardVO> getboards(@Param("startRow")int startRow,@Param("pageSize")int pageSize, @Param("search")String search );
+	public List<BoardVO> getBoards(@Param("startRow")int startRow,@Param("pageSize")int pageSize, @Param("search")String search );
 	//게시물갯수 가져오기
 	public int getBoardCount(String search) ;
 }

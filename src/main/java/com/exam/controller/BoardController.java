@@ -1,6 +1,10 @@
 package com.exam.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,18 +29,6 @@ public class BoardController {
 	@Autowired
 	private AttachService attachService;
 	
-	@GetMapping("/write")
-	public String write() {
-		log.info("글쓰기");
-		return "notice/fwrite";
-	}
-	
-	@PostMapping("/write")
-	public String write(BoardVO boardVO) {
-		
-		
-		return "redirect:/board/list";
-	}
 	
 	@GetMapping("/list")
 	public String list(@RequestParam(defaultValue = "1")int pageNum,
@@ -76,13 +68,37 @@ public class BoardController {
 		int startPage = ((pageNum - 1)/pageBlock )*pageBlock+1;
 		
 		// 끝페이지번호 endPage 구하기
-		int endpage = startPage +pageBlock;
-		if (end>) {
-			
+		int endpage = startPage +pageBlock - 1;
+		if (endpage > pageCount) {
+			endpage = pageCount;
 		}
 		
+		//페이지 블록 관련정보Map 또는 Vo객체로준비
+		Map<String, Integer> pageInfoMap = new HashMap<String, Integer>();
+		pageInfoMap.put("count", count);
+		pageInfoMap.put("pageCount", pageCount);
+		pageInfoMap.put("pageBlock", pageBlock);
+		pageInfoMap.put("startPage", startPage);
+		pageInfoMap.put("endpage", endpage);
 		
+		// 뷰에 사영할 데이터를 request객체에wjwkd
+		model.addAttribute("boardList",boardList);
+		model.addAttribute("pageInfoMap",pageInfoMap);
+		model.addAttribute("search",search);
+		model.addAttribute("pageNum",pageNum);
+		
+		return "notice/notice";
+	}// 회원게시판 리스트
+	
+	@GetMapping("/write")
+	public String write(HttpSession session) {
+		String id= (String) session.getAttribute("id");
+		if (id == null) {
+			return "redirect:/board/list";
+		}
+		return "notice/fwrite";
 	}
+	
 	
 	
 	
