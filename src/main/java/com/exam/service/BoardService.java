@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.exam.domain.AttachVO;
 import com.exam.domain.BoardVO;
+import com.exam.mapper.AttachMapper;
 import com.exam.mapper.BoardMapper;
 
 import lombok.extern.log4j.Log4j;
@@ -21,6 +22,7 @@ public class BoardService {
 	
 	@Autowired
 	private BoardMapper boardMapper;
+	private AttachMapper attachMapper;
 	
 	//insert할 레코드의 번호생성 메소드
 	public int nextBoardNum() {
@@ -45,6 +47,13 @@ public class BoardService {
 	
 	public void insertboardAndAttaches(BoardVO boardVO,List<AttachVO> attachList) {
 		// 파일게시판 주글 등록
+		boardMapper.insertBoard(boardVO);
+		
+		if (attachList.size() > 0) {
+			for (AttachVO attachVO : attachList) {
+				attachMapper.insertAttach(attachVO);//첨부파일등록
+			}
+		}
 	}
 	
 	

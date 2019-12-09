@@ -191,6 +191,7 @@ public class BoardController {
 			attachVO.setFilename(multipartFile.getOriginalFilename());
 			
 			if(isImageType(saveFile)) {
+				//섬네일 이미지 생성하기
 				File thumbnailFile = new File(uplaodPath,"s_"+uploadFileName);
 				try(FileOutputStream fos = new FileOutputStream(thumbnailFile)){
 					Thumbnailator.createThumbnail(multipartFile.getInputStream(),fos,100,100);
@@ -203,8 +204,12 @@ public class BoardController {
 			attachList.add(attachVO);
 		}//for
 		
-		boardService.in
-	}
+		boardService.insertboardAndAttaches(boardVO, attachList);
+		
+		return "redirect:/board/list";
+	}//post
+	
+	
 	
 	
 	

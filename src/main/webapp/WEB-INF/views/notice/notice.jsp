@@ -33,7 +33,7 @@ pageEncoding="UTF-8"%>
   </tr>
   
   <c:choose>
-	<c:when test="${pageInforMap.count gt 0}">
+	<c:when test="${pageInfoMap.count gt 0}">
 		<c:forEach var="board" items="${boardList}">
 			<tr onclick="location.href='content.jsp?num=${board.num}&pageNum=${pageNum}';">
 		  	<td>${board.num}</td>
@@ -47,7 +47,7 @@ pageEncoding="UTF-8"%>
 		  	</td>
 		  	<td>${board.username}</td>
 		  	<td><fmt:formatDate value="${board.regDate}" pattern="yyyy.MM.dd"/></td>
-		  	<td>${board.readCount}</td>
+		  	<td>${board.readcount}</td>
 		  </tr>
 		</c:forEach>
 	</c:when>

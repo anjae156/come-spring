@@ -26,7 +26,7 @@ pageEncoding="UTF-8"%>
     
 <h1> 자유게시판 글쓰기</h1>
 
-<form class="basic-form " action="fwriteProcess.jsp" method="post" name="frm" enctype="multipart/form-data">
+<form class="basic-form " action="/board/write" method="post" name="frm" enctype="multipart/form-data">
 <table id="notice">
 
 	<tr>
