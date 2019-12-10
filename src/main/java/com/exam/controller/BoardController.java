@@ -19,8 +19,10 @@ import javax.servlet.http.HttpSession;
 import org.eclipse.jdt.internal.compiler.env.IModule.IService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.exam.domain.AttachVO;
 import com.exam.domain.BoardVO;
+import com.exam.mapper.BoardnoMapper;
 import com.exam.service.AttachService;
 import com.exam.service.BoardService;
 
@@ -208,6 +211,23 @@ public class BoardController {
 		
 		return "redirect:/board/list";
 	}//post
+	
+	
+	@GetMapping("/content")
+	public String content(int num, @ModelAttribute("pageNum")String PageNum,Model model) {
+		//조회ㅜㅅ 1증가시키는 메소드 활성
+		boardService.updateReadcount(num);
+		
+		//글번호에 해당하는 레코드 한개 가져오기
+		BoardVO boardVO = boardService.getBoard(num);
+		List<AttachVO> attchList = attachService.getAttachs(num);
+		
+		//request 영역객체에 저장
+		model.addAttribute("board",boardVO);
+		model.addAttribute("attachList",attchList);
+		
+		return "notice/content";
+	}
 	
 	
 	

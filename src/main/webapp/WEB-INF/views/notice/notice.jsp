@@ -35,7 +35,7 @@ pageEncoding="UTF-8"%>
   <c:choose>
 	<c:when test="${pageInfoMap.count gt 0}">
 		<c:forEach var="board" items="${boardList}">
-			<tr onclick="location.href='content.jsp?num=${board.num}&pageNum=${pageNum}';">
+			<tr onclick="location.href='/board/content?num=${board.num}&pageNum=${pageNum}';">
 		  	<td>${board.num}</td>
 		  	<td class="left">
 		  	<c:if test="${board.reLev gt 0 }">

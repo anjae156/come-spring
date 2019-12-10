@@ -18,4 +18,8 @@ public interface BoardMapper {
 	public List<BoardVO> getBoards(@Param("startRow")int startRow,@Param("pageSize")int pageSize, @Param("search")String search );
 	//게시물갯수 가져오기
 	public int getBoardCount(String search) ;
+	
+	public void updateReadcount(int num) ;
+	
+	public BoardVO getBoard(int num); 
 }

@@ -56,6 +56,15 @@ public class BoardService {
 		}
 	}
 	
+	public void updateReadcount(int num) {
+		boardMapper.updateReadcount(num);
+	}
+	
+	public BoardVO getBoard(int num) {
+		BoardVO boardVO = boardMapper.getBoard(num);
+		return boardVO;
+	}
+	
 	
 	
 }
