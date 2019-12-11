@@ -18,6 +18,7 @@ import javax.servlet.http.HttpSession;
 
 import org.eclipse.jdt.internal.compiler.env.IModule.IService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
@@ -69,8 +70,15 @@ public class BoardController {
 	@GetMapping("/list")
 	public String list(@RequestParam(defaultValue = "1")int pageNum,
 			@RequestParam(defaultValue = "")String search,
-			Model model) {
+			Model model
+			,HttpSession session) {
 		log.info(pageNum);
+		
+		String id= (String) session.getAttribute("id");
+		if (id == null) {
+			return "redirect:/";
+		}
+		
 		
 		//======================================
 		//한페이지에 해당하는 글목록 구하기 작업
@@ -214,7 +222,12 @@ public class BoardController {
 	
 	
 	@GetMapping("/content")
-	public String content(int num, @ModelAttribute("pageNum")String PageNum,Model model) {
+	public String content(int num, @ModelAttribute("pageNum")String PageNum,Model model,HttpSession session) {
+		String id = (String)session.getAttribute("id");
+		log.info(id);
+		if (id==null) {
+			return "redirect:/board/list";
+		}
 		//조회ㅜㅅ 1증가시키는 메소드 활성
 		boardService.updateReadcount(num);
 		

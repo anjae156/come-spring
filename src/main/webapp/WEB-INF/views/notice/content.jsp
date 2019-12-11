@@ -27,7 +27,7 @@
 					</tr>
 					<tr>
 						<th><label>작성자명</label></th>
-						<td>${board.userName}</td>
+						<td>${board.username}</td>
 						<th><label>작성일자</label></th>
 						<td><fmt:formatDate value="${board.regDate}" pattern="yyyy년MM월dd일"/></td>
 					</tr>
@@ -41,43 +41,32 @@
 							<c:forEach var="attach" items="${attachList}">
 								<c:choose>
 									<c:when test="${attach.filetype eq 'I' }"><%--이미지타입 파일이면 --%>
-									<a href="../upload/<%=attachVO.getFilename() %>">
-											<img src="../upload/<%=attachVO.getFilename() %>"  height="">
+									<a href="../upload/${attach.fileName }">
+											<img src="../upload/${attach.filename}"  height="">
 										</a><br>
 									</c:when>
+									<c:otherwise>
+									<a href="../upload/${attach.filename}" download>
+										${attach.filename}
+									</a><br>
+									</c:otherwise>
 								</c:choose>
 							</c:forEach>
-								<%
-								for (AttachVO attachVO : attachList) {
-									if (attachVO.getFiletype().equals("I")) { // 이미지 타입
-										%>
-										<a href="../upload/<%=attachVO.getFilename() %>">
-											<img src="../upload/<%=attachVO.getFilename() %>"  height="">
-										</a><br>
-										<%
-									} else {
-										%>
-										<a href="../upload/<%=attachVO.getFilename() %>" download>
-											<%=attachVO.getFilename() %>
-										</a><br>
-										<%
-									}
-								} // for
-								%>
+								
 							</td>
 						</tr>
 						<tr colspan="3">
-						<pre style="text-align:center; background-color: white; font-family:inherit; font-size: x-large; min-height: 20vh" ><%=boardVO.getContent() %></pre>
+						<pre style="text-align:center; background-color: white; font-family:inherit; font-size: x-large; min-height: 20vh" >${board.content}</pre>
 						</tr>
 					
 				</table>
 
 				
 				<div>
-					<input type="button" value="글수정" class="BB"  onclick="location.href='fupdate.jsp?num=<%=boardVO.getNum() %>&pageNum=<%=pageNum %>';"/>
+					<input type="button" value="글수정" class="BB"  onclick="location.href='fupdate.jsp?num=${board.num}&pageNum=${pageNum}';"/>
 					<input type="button" value="글삭제" class="BB" onclick="checkDelete();"/>
-					<input type="button" value="답글쓰기" class="BB" onclick="location.href='reWrite.jsp?reRef=<%=boardVO.getReRef() %>&reLev=<%=boardVO.getReLev() %>&reSeq=<%= boardVO.getReSeq()%>';"/>
-					<input type="button" value="목록보기" class="BB" onclick="location.href='notice.jsp?pagenum=<%=pageNum %>';"/>
+					<input type="button" value="답글쓰기" class="BB" onclick="location.href='reWrite.jsp?reRef=${board.reRef}&reLev=${board.reLev}&reSeq=${board.reSeq}';"/>
+					<input type="button" value="목록보기" class="BB" onclick="location.href='notice.jsp?pagenum=${pageNum}';"/>
 				</div>
 			
 			</article>
@@ -92,10 +81,10 @@
 		</div>
 		<script>
 		function checkDelete() {
-			var result =confirm('<%= boardVO.getNum()%> 번글을 정말 삭제할건가?');
+			var result =confirm('${board.num} 번글을 정말 삭제할건가?');
 			
 			if(result == true){
-				location.href ='delete.jsp?num=<%=boardVO.getNum()%>&pageNum=<%=pageNum%>';
+				location.href ='delete.jsp?num=${board.num}&pageNum=${pageNum}';
 			}
 		}
 		</script>
