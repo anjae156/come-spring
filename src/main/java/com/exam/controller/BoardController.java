@@ -3,6 +3,7 @@ package com.exam.controller;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.UUID;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.eclipse.jdt.internal.compiler.env.IModule.IService;
@@ -71,12 +73,18 @@ public class BoardController {
 	public String list(@RequestParam(defaultValue = "1")int pageNum,
 			@RequestParam(defaultValue = "")String search,
 			Model model
-			,HttpSession session) {
+			,HttpSession session
+			,HttpServletResponse response)
+			throws Exception {
 		log.info(pageNum);
 		
 		String id= (String) session.getAttribute("id");
 		if (id == null) {
-			return "redirect:/";
+			response.setContentType("text/html; charset=UTF-8");
+            PrintWriter out = response.getWriter();
+            out.println("<script>alert('로그인 하셔야합니다~.');location.href=('/member/login');</script>");
+            out.flush();
+            
 		}
 		
 		
@@ -135,16 +143,22 @@ public class BoardController {
 	}// 회원게시판 리스트
 	
 	@GetMapping("/write")
-	public String write(HttpSession session) {
+	public String write(HttpSession session, HttpServletResponse response)throws Exception {
 		String id= (String) session.getAttribute("id");
 		if (id == null) {
-			return "redirect:/board/list";
+			response.setContentType("text/html; charset=UTF-8");
+            PrintWriter out = response.getWriter();
+            out.println("<script>alert('로그인 정보를 확인해주세요.');location.href=('/member/login');</script>");
+            out.flush();
+            
 		}
 		return "notice/fwrite";
 	}
 	
 	@PostMapping("/write")
-	public String write(MultipartFile[] files,BoardVO boardVO,HttpServletRequest request)throws Exception{
+	public String write(MultipartFile[] files,
+			BoardVO boardVO,
+			HttpServletRequest request)throws Exception{
 		if (files != null) {
 			log.info("files.length:" +files.length);
 		}
@@ -222,11 +236,19 @@ public class BoardController {
 	
 	
 	@GetMapping("/content")
-	public String content(int num, @ModelAttribute("pageNum")String PageNum,Model model,HttpSession session) {
-		String id = (String)session.getAttribute("id");
-		log.info(id);
-		if (id==null) {
-			return "redirect:/board/list";
+	public String content(int num, @ModelAttribute("pageNum")String PageNum,
+			Model model,
+			HttpSession session,
+			HttpServletResponse response)throws Exception {
+		
+		
+		String id= (String) session.getAttribute("id");
+		if (id == null) {
+			response.setContentType("text/html; charset=UTF-8");
+            PrintWriter out = response.getWriter();
+            out.println("<script>alert('로그인 정보를 확인해주세요.');location.href=('/member/login');</script>");
+            out.flush();
+            
 		}
 		//조회ㅜㅅ 1증가시키는 메소드 활성
 		boardService.updateReadcount(num);
