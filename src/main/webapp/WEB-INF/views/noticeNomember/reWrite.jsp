@@ -22,11 +22,11 @@ article {
 
 		<article id="C">
 			<h1>답글쓰기</h1>
-			<form action="/boardno/list" method="post" name="frm"
+			<form action="/boardno/reple" method="post" name="frm"
 				class="basic-form">
-				<input type="hidden" name="reRef" value="${board.reRef }" /> 
-				<input type="hidden" name="reLev" value="${board.reLev }" /> 
-				<input type="hidden" name="reSeq" value="${board.reSeq }" />
+				<input type="hidden" name="reRef" value="${boardVO.reRef}" /> 
+				<input type="hidden" name="reLev" value="${boardVO.reLev}" /> 
+				<input type="hidden" name="reSeq" value="${boardVO.reSeq}" />
 				<table id="con">
 
 					<tr>
@@ -49,9 +49,9 @@ article {
 				</table>
 
 				<div id="table_search">
-					<input type="submit" value="답글쓰기" /> <input type="reset"
-						value="다시작성" /> <input type="button" value="목록보기"
-						onclick="location.href='/boardno/list';" />
+					<input type="submit" value="답글쓰기" /> 
+					<input type="reset" value="다시작성" /> 
+					<input type="button" value="목록보기" onclick="location.href='/boardno/list';" />
 				</div>
 			</form>
 		</article>

@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<link href="../resources/css/subpage.css" rel="stylesheet" type="text/css"  media="all">
+<link href="/resources/css/subpage.css" rel="stylesheet" type="text/css"  media="all">
     <jsp:include page="../include/common_head.jsp"></jsp:include>
     <title>글쓰기 페이지 </title>
 </head>

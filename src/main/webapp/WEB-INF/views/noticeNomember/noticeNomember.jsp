@@ -73,13 +73,13 @@
  
 <div id="page_control">
 
-<c:if test="${pageInfoMap.count gt 0 }">
+<%-- <c:if test="${pageInfoMap.count gt 0 }"> --%>
 	<%--[이전]출력 --%>
-	<c:if test="${pegeInfoMap.count gt 0}">
-	<a href="/boardno/list?pageNum=${pageInfoMap.startPage - pageInfoMap.pageBlock}&search=${search}">[이전]</a>
+	<c:if test="${pegeInfoMap.startPage gt pageInfoMap.pageBlock}">
+		<a href="/boardno/list?pageNum=${pageInfoMap.startPage - pageInfoMap.pageBlock + 4 }&search=${search}">[이전]</a>
 	</c:if>
 
-	<c:forEach var="i" begin="${pageInfoMap.startpage}" end="${pageInfoMap.endPage}" step="1">
+	<c:forEach var="i" begin="${pageInfoMap.startPage}" end="${pageInfoMap.endPage}" step="1">
 		<a href="/boardno/list?pageNum=${i}&search=${search}">
 		<c:choose>
 			<c:when test="${i eq pageNum}">
@@ -92,10 +92,14 @@
 		</a>
 	</c:forEach>
 	
+	
 	<%--[다음]출력 --%>
 	<c:if test="${pagaInfoMap.endPage lt pageInfoMap.pageCount}">
 		<a href="/boardno/list?pageNum=${pageInfoMap.startPage+pageInfoMap.pageBlock}&search=${search}">[다음]</a>
 	</c:if>
+<%-- </c:if> --%>
+<c:if test="${id eq 'admin'}">
+	<button  class="BB" type="button" onclick="location.href='../boardno/deletes'">회원게시글관리</button>
 </c:if>
 </div>
 	

@@ -70,10 +70,10 @@ public class BoardnoController {
 		
 		log.info("pageNum: "+pageNum);
 		
-		int pageSize = 10;
+		int pageSize = 5;
 		
 		// 시작행번호 구하기
-		int startRow = (pageNum-1) *pageSize;
+		int startRow = (pageNum-1) * pageSize +1;
 		
 		// 글목록가져오기 메소드 호출
 		List<BoardVO> boardList = boardnoService.getBoards(startRow, pageSize, search);
@@ -187,7 +187,7 @@ public class BoardnoController {
 		
 		// 삭제처리후 글목록 / board.list로 이동
 		HttpHeaders headers = new HttpHeaders();
-		headers.add("Location","/board/list?pageNum="+pageNum);
+		headers.add("Location","/boardno/list?pageNum="+pageNum);
 		return new ResponseEntity<String>(headers,HttpStatus.FOUND); //  httpStatus.Found 리다이렉트
 	}
 	
@@ -209,8 +209,55 @@ public class BoardnoController {
 		
 		rttr.addAttribute("pageNum",pageNum);
 		return "redirect:/boardno/list";
+	}
+	
+	@GetMapping("/deletes")
+	public String deletes(@RequestParam(defaultValue = "1")int pageNum,
+			
+			@RequestParam(defaultValue = "",required = false) String search,
+			
+			Model model) {
 		
+log.info("pageNum: "+pageNum);
 		
+		int pageSize = 10;
+		
+		// 시작행번호 구하기
+		int startRow = (pageNum) *pageSize +1;
+		
+		// 글목록가져오기 메소드 호출
+		List<BoardVO> boardList = boardnoService.getBoards(startRow, pageSize, search);
+		//페이지 블록
+		int count = boardnoService.getBoardCount(search);
+		
+		// 총페이지 개수 구하기
+		int pageCount = count / pageSize + (count % pageSize == 0 ? 0: 1);
+		// 페이지블록
+		int pageBlock = 5;
+		// 시작페이지 구하기
+		int startPage = ((pageNum-1) / pageBlock) * pageBlock + 1 ;
+		
+		// 끝헤이지 번호 구하기
+		int endPage = startPage + pageBlock - 1;
+		if (endPage > pageCount) {
+			endPage = pageCount;
+		}
+		log.info(endPage);
+		
+		// 페이지블록관련정보를 map또는 VO객체로 준비
+		Map<String, Integer> pageInfoMap = new HashMap<String, Integer>();
+		pageInfoMap.put("count", count);
+		pageInfoMap.put("pageCount",pageCount);
+		pageInfoMap.put("pageBlock",pageBlock);
+		pageInfoMap.put("startPage", startPage);
+		pageInfoMap.put("endPage", endPage);
+		// 뷰에 사용할데이터을 request 객체에 저장
+		model.addAttribute("boardList",boardList);
+		model.addAttribute("pageInfoMap",pageInfoMap);
+		model.addAttribute("search",search);
+		model.addAttribute("pageNum",pageNum);
+		
+		return "noticeNomember/nodeletes";
 	}
 	
 }

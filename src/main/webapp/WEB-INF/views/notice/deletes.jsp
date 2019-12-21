@@ -115,8 +115,9 @@ SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");
 </table>
 
 <div id="table_search">
+	
 	<input type="button" value="글쓰기" class="BB" onclick="location.href='fwrite.jsp';">
-	<button class="BB" type="submit">일괄삭제</button>
+
 </div>
 </form>
 <form action="notice.jsp" method="get">
