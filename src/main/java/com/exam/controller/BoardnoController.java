@@ -1,12 +1,15 @@
 package com.exam.controller;
 
 import java.awt.print.Pageable;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -68,12 +71,11 @@ public class BoardnoController {
 			
 			Model model) {
 		
-		log.info("pageNum: "+pageNum);
-		
-		int pageSize = 5;
+		int pageSize = 10;
 		
 		// 시작행번호 구하기
-		int startRow = (pageNum-1) * pageSize +1;
+		int startRow = (pageNum-1) * pageSize;
+		log.info("start"+startRow);
 		
 		// 글목록가져오기 메소드 호출
 		List<BoardVO> boardList = boardnoService.getBoards(startRow, pageSize, search);
@@ -92,7 +94,6 @@ public class BoardnoController {
 		if (endPage > pageCount) {
 			endPage = pageCount;
 		}
-		log.info(endPage);
 		
 		// 페이지블록관련정보를 map또는 VO객체로 준비
 		Map<String, Integer> pageInfoMap = new HashMap<String, Integer>();
@@ -216,14 +217,23 @@ public class BoardnoController {
 			
 			@RequestParam(defaultValue = "",required = false) String search,
 			
-			Model model) {
+			Model model
+			,HttpSession session
+			,HttpServletResponse response)
+	throws Exception{
 		
-log.info("pageNum: "+pageNum);
+		String id = (String) session.getAttribute("id");
+		if (id == null || !id.equals("admin")) {
+			response.setContentType("text/html; charset=UTF-8");
+		    PrintWriter out = response.getWriter();
+		    out.println("<script>alert('로그인 정보를 확인해주세요.');location.href=('/#third');</script>");
+		    out.flush();
+		}
 		
 		int pageSize = 10;
 		
 		// 시작행번호 구하기
-		int startRow = (pageNum) *pageSize +1;
+		int startRow = (pageNum-1) * pageSize;
 		
 		// 글목록가져오기 메소드 호출
 		List<BoardVO> boardList = boardnoService.getBoards(startRow, pageSize, search);
@@ -242,7 +252,6 @@ log.info("pageNum: "+pageNum);
 		if (endPage > pageCount) {
 			endPage = pageCount;
 		}
-		log.info(endPage);
 		
 		// 페이지블록관련정보를 map또는 VO객체로 준비
 		Map<String, Integer> pageInfoMap = new HashMap<String, Integer>();
@@ -258,6 +267,55 @@ log.info("pageNum: "+pageNum);
 		model.addAttribute("pageNum",pageNum);
 		
 		return "noticeNomember/nodeletes";
+	}
+	
+	@PostMapping("/deletes")
+	public ResponseEntity<String> deletes(int[] numArr) {
+		if(numArr == null) {
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("Content-Type", "text/html; charset=UTF-8");
+			StringBuilder sb = new StringBuilder();
+			sb.append("<script>");
+			sb.append("alert('하나이상 선택좀 해주세영.');");
+			sb.append("history.back();");
+			sb.append("</script>");
+			return new ResponseEntity<String>(sb.toString(),headers,HttpStatus.FOUND);
+		}else if(numArr.length >= 1) {
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("Content-Type", "text/html; charset=UTF-8");
+			StringBuilder sb = new StringBuilder();
+			for (int num:numArr) {
+				// 게시글삭제메소드호출
+				boardnoService.deleteBoard(num);//글 삭제처리			
+			}
+			sb.append("<script>");
+			sb.append("alert('삭제완료.');");
+			sb.append("location.href='/boardno/deletes';");
+			sb.append("</script>");
+			return new ResponseEntity<String> (sb.toString(), headers, HttpStatus.OK);
+		}
+//		if(numArr.length > 1) {
+//			HttpHeaders headers = new HttpHeaders();
+//			headers.add("Content-Type", "text/html; charset=UTF-8");
+//			StringBuilder sb = new StringBuilder();
+//			sb.append("<script>");
+//			sb.append("var result = confirm('정말로 삭제하시겠습니까.');");
+//			sb.append("if(result){");
+//			for (int num:numArr) {
+//				// 게시글삭제메소드호출
+//				boardnoService.deleteBoard(num);//글 삭제처리
+//			}
+//			sb.append("} else {");
+//			sb.append("} history.back(); ");
+//			headers.add("Location","/boardno/deletes");
+//			return new ResponseEntity<String> (sb.toString(), headers, HttpStatus.OK);
+//		}
+		
+		
+		// 삭제처리후 글목록 / board.list로 이동
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Location","/boardno/deletes");
+		return new ResponseEntity<String>(headers,HttpStatus.FOUND); //  httpStatus.Found 리다이렉트
 	}
 	
 }

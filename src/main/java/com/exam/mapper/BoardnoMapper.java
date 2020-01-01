@@ -27,12 +27,8 @@ public interface BoardnoMapper {
 	public void updateBoard(BoardVO boardVO);
 	//게시글삭제
 	public void deleteBoard(int num);
-	//다중삭제
-	public void deleteBoard(String[] num);
 	//답글 그룹시퀀스
 	public int updateReplyGroupSequence(@Param("reRef") int reRef, @Param("reSeq") int reSeq);
-	//다중글삭
-	public void deleteBoards(String[] boardnum);
 	
 	public int countByNumAndPasswd(@Param("num")int num,@Param("passwd")String passwd ) ;
 		

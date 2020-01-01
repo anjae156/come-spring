@@ -31,7 +31,6 @@
   </tr>
   <c:choose>
   	<c:when test="${pageInfoMap.count gt 0}">
-  		
   		<c:forEach var="board" items="${boardList}">
   			<tr onclick="location.href='/boardno/content?num=${board.num}&pageNum=${pageNum}';">
 		  	<td>${board.num}</td>
@@ -62,7 +61,7 @@
 	<input type="button" value="글쓰기" class="BB" onclick="location.href='/boardno/write';">
 </div>
 
-<form action="/noticeNomember" method="get">
+<form action="/boardno/list">
 <div id="table_search">
 	<input type="text" name="search" value="${search}" class="input_box">
 	<input type="submit" value="제목검색" class="BB">
@@ -76,7 +75,7 @@
 <%-- <c:if test="${pageInfoMap.count gt 0 }"> --%>
 	<%--[이전]출력 --%>
 	<c:if test="${pegeInfoMap.startPage gt pageInfoMap.pageBlock}">
-		<a href="/boardno/list?pageNum=${pageInfoMap.startPage - pageInfoMap.pageBlock + 4 }&search=${search}">[이전]</a>
+		<a href="/boardno/list?pageNum=${pageInfoMap.startPage - pageInfoMap.pageBlock}&search=${search}">[이전]</a>
 	</c:if>
 
 	<c:forEach var="i" begin="${pageInfoMap.startPage}" end="${pageInfoMap.endPage}" step="1">

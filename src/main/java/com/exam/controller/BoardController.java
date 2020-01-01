@@ -76,13 +76,12 @@ public class BoardController {
 			,HttpSession session
 			,HttpServletResponse response)
 			throws Exception {
-		log.info(pageNum);
 		
 		String id= (String) session.getAttribute("id");
 		if (id == null) {
 			response.setContentType("text/html; charset=UTF-8");
             PrintWriter out = response.getWriter();
-            out.println("<script>alert('로그인 하셔야합니다~.');location.href=('/member/login');</script>");
+            out.println("<script>alert('로그인 정보를 확인해 주세요.');location.href=('/member/login');</script>");
             out.flush();
             
 		}
@@ -162,75 +161,81 @@ public class BoardController {
 		if (files != null) {
 			log.info("files.length:" +files.length);
 		}
+
+		// IP주소 값 저장
 		boardVO.setIp(request.getRemoteAddr());
-		//게시글번호 생성하는 메소드 호출
+
+		// 게시글 번호 생성하는 메소드 호출
 		int num = boardService.nextBoardNum();
-		
-		// 생성된번호흫 자바빈 글번호 필드에 설정
+		// 생성된 번호를 자바빈 글번호 필드에 설정
 		boardVO.setNum(num);
-		boardVO.setReadcount(0);
-		// 주글일경우
-		boardVO.setReRef(num);
-		boardVO.setReLev(0);
-		boardVO.setReSeq(0);
-		//=============================================boardVO설정완료
-		
-		
-		//==============================================Upload시작
+		boardVO.setReadcount(0); // 조회수 0
+
+		// 주글일 경우
+		boardVO.setReRef(num); // [글그룹번호]는 글번호와 동일함
+		boardVO.setReLev(0); // [들여쓰기 레벨] 0
+		boardVO.setReSeq(0); // [글그룹 안에서의 순서] 0
+		// ======================================= boardVO 설정 완료.
+
+		// ======================================= Upload 시작
 		ServletContext application = request.getServletContext();
-		String realpath = application.getRealPath("resources/upload");
-		log.info("realPath :" + realpath);
-		
-		// 폴더 동적생성하기
-		File uplaodPath = new File(realpath,getFolder());
-		log.info("uploadPath:"+uplaodPath);
-		if (!uplaodPath.exists()) {//존재하면? 이란뜻
-			uplaodPath.mkdirs();//업로드할폴더생성
+		String realPath = application.getRealPath("/resources/upload");
+		log.info("realPath : " + realPath);
+
+		// 폴더 동적 생성하기 /resources/upload/2019/11/11
+		File uploadPath = new File(realPath, getFolder());
+		log.info("uploadPath : " + uploadPath);
+		if (!uploadPath.exists()) {
+			uploadPath.mkdirs(); // 업로드할 폴더 생성
 		}
-		
+
 		List<AttachVO> attachList = new ArrayList<AttachVO>();
-		
+
 		for (MultipartFile multipartFile : files) {
-			log.info("파일명:"+multipartFile.getOriginalFilename());
-			log.info("파일크기:"+multipartFile.getSize());
-			
+			log.info("파일명: " + multipartFile.getOriginalFilename());
+			log.info("파일크기: " + multipartFile.getSize());
+
 			if (multipartFile.isEmpty()) {
-				continue;//건너뛰기
+				continue;
 			}
-			
+
 			String uploadFileName = multipartFile.getOriginalFilename();
 			UUID uuid = UUID.randomUUID();
-			uploadFileName = uuid.toString() +"_"+uploadFileName;
-			log.info("최종업로드 파일명:"+uploadFileName);
-			
-			File saveFile = new File(uplaodPath,uploadFileName);
-			multipartFile.transferTo(saveFile);//파일업로드 수행완료
-			
-			//======================================================
-			
-			//attach 테이블에 insert할 AttachVO를 리스트로 준비하기
+			uploadFileName = uuid.toString() + "_" + uploadFileName;
+			log.info("최종 업로드 파일명: " + uploadFileName);
+
+			File saveFile = new File(uploadPath, uploadFileName);
+
+			multipartFile.transferTo(saveFile); // 파일 업로드 수행 완료
+
+			// ==============================================
+
+			// attach 테이블에 insert할 AttachVO를 리스트로 준비하기
 			AttachVO attachVO = new AttachVO();
 			attachVO.setBno(boardVO.getNum());
 			attachVO.setUuid(uuid.toString());
 			attachVO.setUploadpath(getFolder());
 			attachVO.setFilename(multipartFile.getOriginalFilename());
-			
-			if(isImageType(saveFile)) {
-				//섬네일 이미지 생성하기
-				File thumbnailFile = new File(uplaodPath,"s_"+uploadFileName);
-				try(FileOutputStream fos = new FileOutputStream(thumbnailFile)){
-					Thumbnailator.createThumbnail(multipartFile.getInputStream(),fos,100,100);
+
+			if (isImageType(saveFile)) { // Image file type
+				// 섬네일 이미지 생성하기
+				File thumbnailFile = new File(uploadPath, "s_" + uploadFileName);
+
+				try (FileOutputStream fos = new FileOutputStream(thumbnailFile)) {
+					Thumbnailator.createThumbnail(multipartFile.getInputStream(), fos, 100, 100);
 				}
+
 				attachVO.setFiletype("I");
-			}else {
+			} else { // Other file type
 				attachVO.setFiletype("O");
 			}
-			
+
 			attachList.add(attachVO);
-		}//for
-		
-		boardService.insertboardAndAttaches(boardVO, attachList);
-		
+		} // for
+
+		// 테이블 insert : board테이블과 attach테이블 트랜잭션으로 insert
+		boardService.insertBoardAndAttaches(boardVO, attachList);
+
 		return "redirect:/board/list";
 	}//post
 	

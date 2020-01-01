@@ -75,8 +75,8 @@ pageEncoding="UTF-8"%>
 <div id="page_control">
 <c:if test="${pageInfoMap.count gt 0 }">
 	<%--[이전] 출력 --%>
-	<c:if test="${pageInfoMap.count }">
-		<a href="notice.jsp?pageNum=${pageInfoMap.startPage - pageInfoMap.pageBlock +1 }&search=${search}">[이전]</a>
+	<c:if test="${pageInfoMap.startPage gt pageInfoMap.pageBlock}">
+		<a href="notice.jsp?pageNum=${pageInfoMap.startPage - pageInfoMap.pageBlock}&search=${search}">[이전]</a>
 	</c:if>
 </c:if>
 
@@ -92,6 +92,7 @@ pageEncoding="UTF-8"%>
 	</c:choose>	
 	</a>
 </c:forEach>
+
 <c:if test="${pageInfoMap.endPage lt pageInfoMap.pageCount}">
 	<a href="notice.jsp?pageNum=${pageInfoMap.startPage + pageInfoMap.pageBlock}&search=${search}">[다음]</a>
 </c:if>

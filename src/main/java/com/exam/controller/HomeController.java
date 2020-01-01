@@ -36,7 +36,6 @@ public class HomeController {
 			@RequestParam(defaultValue = "",required = false) String search,
 			
 			Model model) {
-		log.info("pageNum: "+pageNum);
 		
 		int pageSize = 13;
 		
@@ -60,7 +59,6 @@ public class HomeController {
 		if (endPage > pageCount) {
 			endPage = pageCount;
 		}
-		log.info(endPage);
 		
 		// 페이지블록관련정보를 map또는 VO객체로 준비
 		Map<String, Integer> pageInfoMap = new HashMap<String, Integer>();
@@ -75,7 +73,6 @@ public class HomeController {
 		model.addAttribute("search",search);
 		model.addAttribute("pageNum",pageNum);
 		
-		log.info("메인");
 		return "main/main";
 	}
 	

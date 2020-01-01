@@ -6,7 +6,7 @@
 <meta charset="utf-8">
 <link href="/resources/css/subpage.css" rel="stylesheet" type="text/css"  media="all">
     <jsp:include page="../include/common_head.jsp"></jsp:include>
-    <title>글쓰기 페이지 </title>
+    <title>자유게시판 글쓰기</title>
 </head>
 
 <body class="full-width back-image5 full-page page">
@@ -92,9 +92,7 @@ function check() {
 	}
 	return true;
 }
-function backCheck() {
-	
-}
+
 
 </script>
 

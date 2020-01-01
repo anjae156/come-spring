@@ -80,5 +80,6 @@
 		AND re_seq > #{reSeq} 
 	</update>
 	
+	
 		
 </mapper>

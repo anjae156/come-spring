@@ -6,15 +6,13 @@ pageEncoding="UTF-8"%>
 <html>
 <head>
 <meta charset="utf-8">
-<link href="../css/default.css" rel="stylesheet" type="text/css" media="all">
-<link href="../css/subpage.css" rel="stylesheet" type="text/css"  media="all">
+<link href="/resources/css/subpage.css" rel="stylesheet" type="text/css"  media="all">
 <%--CSS링크 --%>
     <jsp:include page="../include/common_head.jsp"></jsp:include>
-    <title>글쓰기 페이지 </title>
-
+    <title>공략게시판 글쓰기 </title>
 </head>
 
-<body class="  full-page " style="background-color: grey" >
+<body class="  full-page back-image5 full-page page">
 
 <div id="wrap">
 	<%--헤더링크 --%>
@@ -22,11 +20,11 @@ pageEncoding="UTF-8"%>
 
 
 
-<article id="C">
+<article>
     
-<h1> 자유게시판 글쓰기</h1>
+<h1>공략게시판 글쓰기</h1>
 
-<form class="basic-form " action="/board/write" method="post" name="frm" enctype="multipart/form-data">
+<form class="basic-form " action="/board/write" method="post" name="frm" enctype="multipart/form-data" onsubmit="return Check();">
 <table id="notice">
 
 	<tr>
@@ -84,7 +82,7 @@ pageEncoding="UTF-8"%>
 var num = 2; //초기값
 function addFileElement() {
 	if(num > 5){
-		alert('최대 5개 까지만 하거라');
+		alert('최대 5개까지만 올릴수 있어요');
 		return;
 	}
 	

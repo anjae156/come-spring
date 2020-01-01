@@ -13,16 +13,13 @@
     <title>자유게시판 </title>
 </head>
 <body>
-<c:if test="${id eq not'admin'}">
-<c:redirect url="/member/login"/>
-</c:if>
 <div id="wrap2" class="full-width full-page pagenoti" style="background-color: grey;">
 		<%--헤더링크 --%>
    <jsp:include page="../include/header.jsp"></jsp:include>
 <article id="B" style="background-color: #aaaaaa44">
     
-<h1>비회원게시판 [글개수 : ${pageInfoMap.count}]</h1>
-<form action="/boardno/deletes" method="post" onsubmit="return Check;">
+<h1> 글삭제 합시당 [글개수 : ${pageInfoMap.count}]</h1>
+<form action="/boardno/deletes" method="post" onsubmit="return Check();">
 <table id="notice">
   <tr>
     <th scope="col" class="tno">글번호</th>
@@ -34,22 +31,21 @@
   </tr>
   <c:choose>
   	<c:when test="${pageInfoMap.count gt 0}">
-  		
   		<c:forEach var="board" items="${boardList}">
-  			<tr onclick="location.href='/boardno/content?num=${board.num}&pageNum=${pageNum}';">
+  			<tr>
 		  	<td>${board.num}</td>
-		  	<td class="left">
+		  	<td class="left"  onclick="location.href='/boardno/content?num=${board.num}&pageNum=${pageNum}';">
 		  	<c:if test="${board.reLev gt 0 }">
 		  		<c:set var="level" value="${board.reLev * 10}"/>
-				<img src="../resources/imgs/re/level.gif" width="${level}" height="13">
-		  		<img src="../resources/imgs/re/icon_re.gif" width="13" height="13">
+				<img src="/resources/imgs/re/level.gif" width="${level}" height="13">
+		  		<img src="/resources/imgs/re/icon_re.gif" width="13" height="13">
 		  	</c:if>
 		  	${board.subject}
 		  	</td>
 		  	<td>${board.username}</td>
 		  	<td><fmt:formatDate value="${board.regDate}" pattern="yyyy.MM.dd" /></td>
 		  	<td>${board.readcount}</td>
-		  	<td><input type="checkbox" name="delnum" value="${board.num}" id="delnum" /></td>
+		  	<td><input type="checkbox" name="numArr" value="${board.num}" id="numArr" /></td>
 		  </tr>
   		</c:forEach>
   	</c:when>
@@ -63,12 +59,12 @@
 </table>
 
 <div id="table_search">
-<button class="BB" type="submit">일괄삭제</button>
+<button class="BB" type="submit" >일괄삭제</button>
 	<input type="button" value="글쓰기" class="BB" onclick="location.href='/boardno/write';">
 </div>
 </form>
 
-<form action="/board/deletes" method="post">
+<form action="/boardno/deletes">
 <div id="table_search">
 	<input type="text" name="search" value="${search}" class="input_box">
 	<input type="submit" value="제목검색" class="BB">
@@ -124,12 +120,6 @@
 <script>
 	function Check() {
 		//글삭제 의도 확인하기
-		var delNum = $('#delNum');
-	
-		if(delNum == "null"){
-			alert('1개이상 선택하세요');
-			return false;
-		}
 		var result = confirm('정말로 삭제하시겠습니까?');
 		if(result == false){
 			return false;

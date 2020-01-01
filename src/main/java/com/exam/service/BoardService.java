@@ -45,7 +45,7 @@ public class BoardService {
 		return list;
 	}
 	
-	public void insertboardAndAttaches(BoardVO boardVO,List<AttachVO> attachList) {
+	public void insertBoardAndAttaches(BoardVO boardVO,List<AttachVO> attachList) {
 		// 파일게시판 주글 등록
 		boardMapper.insertBoard(boardVO);
 		
