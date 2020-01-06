@@ -22,6 +22,7 @@ public class BoardService {
 	
 	@Autowired
 	private BoardMapper boardMapper;
+	@Autowired
 	private AttachMapper attachMapper;
 	
 	//insert할 레코드의 번호생성 메소드
@@ -49,6 +50,7 @@ public class BoardService {
 		// 파일게시판 주글 등록
 		boardMapper.insertBoard(boardVO);
 		
+	
 		if (attachList.size() > 0) {
 			for (AttachVO attachVO : attachList) {
 				attachMapper.insertAttach(attachVO);//첨부파일등록

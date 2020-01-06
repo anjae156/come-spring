@@ -41,12 +41,12 @@
 							<c:forEach var="attach" items="${attachList}">
 								<c:choose>
 									<c:when test="${attach.filetype eq 'I' }"><%--이미지타입 파일이면 --%>
-									<a href="../upload/${attach.fileName }">
-											<img src="../upload/${attach.filename}"  height="">
+									<a href="../resources/upload/${attach.uploadpath}/${attach.uuid}_${attach.filename}">
+											<img src="../resources/upload/${attach.uploadpath}/s_${attach.uuid}_${attach.filename}"  height="">
 										</a><br>
 									</c:when>
 									<c:otherwise>
-									<a href="../upload/${attach.filename}" download>
+									<a href="javascript:location.href='/board/download?fileName=${attach.uploadpath}/${attach.uuid}_' + encodeURIComponent('${attach.filename}');">
 										${attach.filename}
 									</a><br>
 									</c:otherwise>

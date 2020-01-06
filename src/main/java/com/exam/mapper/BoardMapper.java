@@ -22,4 +22,11 @@ public interface BoardMapper {
 	public void updateReadcount(int num) ;
 	
 	public BoardVO getBoard(int num); 
+	
+	public void updateBoard(BoardVO boardVO);
+	
+	public void deleteBoard(int num);
+	
+	public int updateReplyGroupSequence(@Param("reRef")int reRef,@Param("reSeq")int reSeq, @Param("reLev")int reLev);
+	public void updateReplyCnt (@Param("bno")int bno, @Param("amount")int amount);
 }

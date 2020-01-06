@@ -7,8 +7,13 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.exam.domain.AttachVO;
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.stereotype.Repository;
 
+import com.exam.domain.AttachVO;
+import com.exam.mapper.AttachMapper;
+
+@Repository
 public class AttachDao {
 
 	private static AttachDao instance = new AttachDao();
@@ -21,177 +26,43 @@ public class AttachDao {
 	
 	//첨부파일정보 입력ㅁ[섣,
 	public void insertAttach(AttachVO attachVO){
-		Connection con = null;
-		PreparedStatement pstmt = null;
 		
-		try {
-			con= DBManager.getConnection();
-			String sql = "INSERT INTO attach2 (uuid, filename, filetype, bno)";
-			sql += "VALUES (?, ?, ?, ?)";
-			
-			pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, attachVO.getUuid());
-			pstmt.setString(2, attachVO.getFilename());
-			pstmt.setString(3, attachVO.getFiletype());
-			pstmt.setInt(4, attachVO.getBno());
-			// �떎�뻾
-			pstmt.executeUpdate();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}finally {
-			DBManager.close(con, pstmt);
+		try (SqlSession sqlSession = DBManager.getSqlSessionFactory().openSession()) {
+			AttachMapper mapper = sqlSession.getMapper(AttachMapper.class);
+			mapper.insertAttach(attachVO);
+			sqlSession.commit();
 		}
-		
-	}
+	}//insertAttach method
 	
-public List<AttachVO> getAttaches(int num){
+	// 글번호에해당하는 첨부파일정보 가져오기
+	public List<AttachVO> getAttaches(int bno){
 		
-		List<AttachVO> list = new ArrayList<AttachVO>();
 		
-		Connection con=null;
-		PreparedStatement pstmt = null;
-		ResultSet rs= null;
 		
-		try {
-			con = DBManager.getConnection();
-			
-			String sql = "SELECT * FROM attach2 WHERE bno = ?";
-			pstmt = con.prepareStatement(sql);
-			
-			
-				pstmt.setInt(1, num);
-				rs = pstmt.executeQuery();
-
-			
-			
-			while(rs.next()) {
-				AttachVO attachVO = new AttachVO();
-				attachVO.setBno(rs.getInt("bno"));
-				attachVO.setUuid(rs.getString("uuid"));
-				attachVO.setFilename(rs.getString("filename"));
-				attachVO.setFiletype(rs.getString("filetype"));
-				
-				list.add(attachVO);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}finally {
-			DBManager.close(con, pstmt, rs);
+		try (SqlSession sqlSession = DBManager.getSqlSessionFactory().openSession()) {
+			return sqlSession.getMapper(AttachMapper.class).getAttachs(bno);
 		}
-		
-		return list;
-	}
+	}//getAttaches method
 	
-	public List<AttachVO> getAttach(String[] num){
-		
-		List<AttachVO> list = new ArrayList<AttachVO>();
-		
-		Connection con=null;
-		PreparedStatement pstmt = null;
-		ResultSet rs= null;
-		
-		try {
-			con = DBManager.getConnection();
-			
-			String sql = "SELECT * FROM attach2 WHERE bno = ?";
-			pstmt = con.prepareStatement(sql);
-			
-			for (int i = 0; i < num.length; i++) {
-				pstmt.setString(1, num[i]);
-				rs = pstmt.executeQuery();
-				if(rs.next()) {
-					AttachVO attachVO = new AttachVO();
-					attachVO.setBno(rs.getInt("bno"));
-					attachVO.setUuid(rs.getString("uuid"));
-					attachVO.setFilename(rs.getString("filename"));
-					attachVO.setFiletype(rs.getString("filetype"));
-					
-					list.add(attachVO);
-				}
-			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}finally {
-			DBManager.close(con, pstmt, rs);
-		}
-		
-		return list;
-	}
 	
 	
 	
 	public void deleteAttach(int bno){
-		Connection con= null;
-		PreparedStatement pstmt =null;
 		
-		try {
-			con = DBManager.getConnection();
-			String sql ="DELETE FROM attach2 WHERE bno = ?";
-			
-			pstmt = con.prepareStatement(sql);
-			pstmt.setInt(1, bno);
-			// 실행
-			pstmt.executeUpdate();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}finally {
-			DBManager.close(con, pstmt);
+		try (SqlSession sqlSession = DBManager.getSqlSessionFactory().openSession()) {
+			sqlSession.getMapper(AttachMapper.class).deleteAttachByBno(bno);
+			sqlSession.commit();
 		}
+		
 	}// deleteAttach method
-	// uuid에 해당하는 첨부파일정보 한개 삭제하는 메소드
 	
-	public void deleteAttach(String[] num){
-		Connection con= null;
-		PreparedStatement pstmt =null;
-		
-		try {
-			con = DBManager.getConnection();
-			String sql ="DELETE FROM attach2 WHERE bno = ?";
-			
-			pstmt = con.prepareStatement(sql);
-			for (int i = 0; i < num.length; i++) {
-				pstmt.setString(1, num[i]);
-				// 실행
-				pstmt.executeUpdate();
-			}
-			
-			
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}finally {
-			DBManager.close(con, pstmt);
-		}
+	// uuid에 해당하는 첨부파일정보 한개 삭제하는 메소드
+	public void deleteAttach(String uuid){
+		try (SqlSession sqlSession = DBManager.getSqlSessionFactory().openSession()) {
+			sqlSession.getMapper(AttachMapper.class).deleteAttachByUuid(uuid);
+			sqlSession.commit();
+		}	
 	}// deleteAttach method
-	// uuid에 해당하는 첨부파일정보 한개 삭제하는 메소드
-		public void deleteAttach(String uuid) {
-			Connection con = null;
-			PreparedStatement pstmt = null;
-			
-			try {
-				con = DBManager.getConnection();
-				String sql = "DELETE FROM attach2 WHERE uuid = ? ";
-				
-				pstmt = con.prepareStatement(sql);
-				pstmt.setString(1, uuid);
-				// 실행
-				pstmt.executeUpdate();
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				DBManager.close(con, pstmt);
-			}
-		} // deleteAttach method
-		
-		
-		
-		
-		
-	
-	
-	
 	
 	
 	

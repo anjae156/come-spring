@@ -1,5 +1,7 @@
 package com.exam.repository;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,71 +11,26 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 public class DBManager {
+	
+	private static SqlSessionFactory sqlSessionFactory;
+	
+	static {
+		// 자바7이상부터 try with resources 문법 제공. try블록 끝나면 자동으로 close() 호출해서 자원 닫아줌.
+		try (InputStream is = Resources.getResourceAsStream("mybatis-config.xml")) {
+			sqlSessionFactory = new SqlSessionFactoryBuilder().build(is);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	} // static 초기화 블록
 
-	public static Connection getConnection() throws Exception {
-		Connection con = null;
-//		// DB접속정보
-//		String url = "jdbc:oracle:thin:@localhost:1521:xe";
-//		String user = "scott";
-//		String password = "tiger";
-//		
-//		Connection con = null;
-//		// 1단계: DB 드라이버 로딩
-//		Class.forName("oracle.jdbc.OracleDriver");
-//		// 2단계: DB연결
-//		con = DriverManager.getConnection(url, user, password);
-		//DBCP적용한코드
-		// dataSource는 커넥션을 미리 일정개수 보유
-		Context context = new InitialContext();
-		DataSource ds = (DataSource) context.lookup("java:/comp/env/jdbc/mysqldb");
-		con = ds.getConnection(); // 커넥션 한개 빌려오기
-		return con;
+	public static SqlSessionFactory getSqlSessionFactory() {
+		return sqlSessionFactory;
 	}
-	
-	// SELECT문을 수행한 후 리소스 해제를 위한 메소드
-	public static void close(Connection con, Statement stmt, ResultSet rs) {
-		if (rs != null) {
-			try {
-				rs.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		if (stmt != null) {
-			try {
-				stmt.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		if (con != null) {
-			try {
-				con.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-	} // close method
-	
-	// INSERT, UPDATE, DELETE문을 수행한 후 리소스 해제를 위한 메소드
-	public static void close(Connection con, Statement stmt) {
-		if (stmt != null) {
-			try {
-				stmt.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		if (con != null) {
-			try {
-				con.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-	} // close method
 	
 }
 

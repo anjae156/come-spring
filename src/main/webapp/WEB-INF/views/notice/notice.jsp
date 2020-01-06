@@ -76,12 +76,12 @@ pageEncoding="UTF-8"%>
 <c:if test="${pageInfoMap.count gt 0 }">
 	<%--[이전] 출력 --%>
 	<c:if test="${pageInfoMap.startPage gt pageInfoMap.pageBlock}">
-		<a href="notice.jsp?pageNum=${pageInfoMap.startPage - pageInfoMap.pageBlock}&search=${search}">[이전]</a>
+		<a href="/board/list?pageNum=${pageInfoMap.startPage - pageInfoMap.pageBlock}&search=${search}">[이전]</a>
 	</c:if>
 </c:if>
 
 <c:forEach var="i" begin="${pageInfoMap.startPage}" end="${pageInfoMap.endpage}" step="1">
-	<a href="notice.jsp?pageNum=${i}&search=${search}">
+	<a href="/board/list?pageNum=${i}&search=${search}">
 	<c:choose>
 		<c:when test="${i eq pageNum}">
 			<span style="font-weight: bold;">[${i}]</span>
@@ -94,7 +94,7 @@ pageEncoding="UTF-8"%>
 </c:forEach>
 
 <c:if test="${pageInfoMap.endPage lt pageInfoMap.pageCount}">
-	<a href="notice.jsp?pageNum=${pageInfoMap.startPage + pageInfoMap.pageBlock}&search=${search}">[다음]</a>
+	<a href="/board/list?pageNum=${pageInfoMap.startPage + pageInfoMap.pageBlock}&search=${search}">[다음]</a>
 </c:if>
 <c:if test="${id eq 'admin'}">
 	<button  class="BB" type="button" onclick="location.href='board/deletes'">회원게시글관리</button>

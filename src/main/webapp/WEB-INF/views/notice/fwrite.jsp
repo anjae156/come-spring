@@ -24,7 +24,7 @@ pageEncoding="UTF-8"%>
     
 <h1>공략게시판 글쓰기</h1>
 
-<form class="basic-form " action="/board/write" method="post" name="frm" enctype="multipart/form-data" onsubmit="return Check();">
+<form class="basic-form " action="/board/write" method="post" name="frm" enctype="multipart/form-data">
 <table id="notice">
 
 	<tr>
@@ -44,7 +44,7 @@ pageEncoding="UTF-8"%>
 		<th class="twrite">파일</th>
 		<td class="left">
 			<div id="file_container">
-				<input type="file" name="filename1">
+				<input type="file" name="files" multiple>
 			</div>
 			<button type="button" onclick="addFileElement();">파일추가</button>
 		</td>
@@ -87,7 +87,7 @@ function addFileElement() {
 	}
 	
 	// div요소에 file타입input요소를 추가하기
-	var input = '<br><input type="file" name="filename'+ num +'">';
+	var input = '<br><input type="file" name="files" multiple>';
 	num++;// 다음 번추가를 위해 값을 1증가
 	
 	//id속성값이 파일 컨테이너인 디브요소의 참조 구하기

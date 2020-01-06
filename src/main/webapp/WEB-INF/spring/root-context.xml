@@ -29,6 +29,9 @@
 		<property name="dataSource" ref="dataSource"/>
 		<property name="configLocation" value="classpath:/mybatis-config.xml"/>
 	</bean>
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
 	
 	<mybatis-spring:scan base-package="com.exam.mapper"/>
 	

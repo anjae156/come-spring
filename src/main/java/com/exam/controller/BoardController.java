@@ -18,22 +18,29 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.eclipse.jdt.internal.compiler.env.IModule.IService;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
+
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.exam.domain.AttachVO;
 import com.exam.domain.BoardVO;
-import com.exam.mapper.BoardnoMapper;
+
 import com.exam.service.AttachService;
 import com.exam.service.BoardService;
 
@@ -232,9 +239,10 @@ public class BoardController {
 
 			attachList.add(attachVO);
 		} // for
-
+		log.info("왜 왜왜 왜:"+attachList+boardVO);
 		// 테이블 insert : board테이블과 attach테이블 트랜잭션으로 insert
 		boardService.insertBoardAndAttaches(boardVO, attachList);
+		
 
 		return "redirect:/board/list";
 	}//post
@@ -269,6 +277,31 @@ public class BoardController {
 		return "notice/content";
 	}
 	
+	@GetMapping(value = "/download", produces =MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	@ResponseBody
+	public ResponseEntity<Resource> download(String fileName, HttpServletRequest request)throws Exception{
+		// 다운로드할 경로 구하기
+		ServletContext application = request.getServletContext();
+		String realpath = application.getRealPath("/resources/upload");
+		
+		Resource resource = new FileSystemResource(realpath + "/" +fileName);
+		
+		if (!resource.exists()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);//404 에러
+		}
+		
+		String resourceName = resource.getFilename();
+		String resourceOriginalName = resourceName.substring(resourceName.indexOf("_")+1);
+		
+		HttpHeaders headers = new HttpHeaders();
+		
+		String downloadName = "";
+		downloadName = new String(resourceOriginalName.getBytes("UTF-8"), "ISO-8859-1");
+		headers.add("Content-Disposition", "attachment; filename="+ downloadName);
+		
+		return new ResponseEntity<Resource>(resource,headers,HttpStatus.OK);
+		
+	}
 	
 	
 	
